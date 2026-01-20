@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
   const {full_name,username,email,password,role} = req.body;
-  db.query('INSERT INTO users(full_name,username,email,password_hash,role) VALUES (?,?,?,?,?)',[full_name,username,email,password,role],(err,rows)=>{
+  db.query('INSERT INTO users(fullName,username,email,password,role) VALUES (?,?,?,?,?)',[full_name,username,email,password,role],(err,rows)=>{
     if(err) return res.send(err);
     res.send(rows);
   })
