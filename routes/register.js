@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var bcrypt = require('bcrypt');
+var bcrypt = require('./encrypt');
 const db = require('./db_connection')
 router.use(express.json());
 
@@ -11,17 +11,17 @@ router.get('/', function(req, res, next) {
 
 router.post('/',async function (req, res, next) {
   const {full_name,username,email,password,role} = req.body;
-  if(!req.body) return res.json({msg:'no body data sent to server'});
+  if(!req.body) return res.status(400).json({msg:'no body data sent to server'});
   
   const saltRound = 10;
   const password_hash = await bcrypt.hash(password,saltRound);
 
   db.query('INSERT INTO users(fullName,username,email,password,role) VALUES (?,?,?,?,?)',[full_name,username,email,password_hash,role], (err,rows)=>{
-    if(err) return res.json({msg:err.sqlMessage});
-    res.json({msg:'user registered successfully'});
+    if(err) return res.status(400).json({msg:err.sqlMessage});
+    res.status(201).json({msg:'user registered successfully'});
   })
 
 });
-module.exports = bcrypt;
-module.exports = router;
+
+module.exports = router,bcrypt;
 
