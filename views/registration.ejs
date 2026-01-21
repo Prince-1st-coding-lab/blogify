@@ -247,7 +247,7 @@
 
     <!-- Form -->
     <section class="form-wrapper">
-      <form class="card">
+      <form class="card" >
         <h2>Create your account</h2>
         <p>It takes less than a minute.</p>
 
@@ -259,6 +259,9 @@
             </label>
             <label style="display:flex; align-items:center; gap:6px; font-size:14px;">
               <input type="radio" name="role" value="admin"/> Admin
+            </label>
+            <label style="display:flex; align-items:center; gap:6px; font-size:14px;">
+              <input type="radio" name="role" value="reader"/> Reader
             </label>
           </div>
           <div class="hint">Choose how you want to use the platform</div>
@@ -293,7 +296,7 @@
         </div>
 
         <div class="terms">
-          <input type="checkbox" required />
+          <input type="checkbox" required id="terms"/>
           <span>I agree to the <a href="#">Terms</a> & <a href="#">Privacy Policy</a></span>
         </div>
 
@@ -325,6 +328,7 @@
      Create_Account_btn.disabled = true;
     const strength = document.getElementById('strength');
     const role = document.querySelector('input[name="role"]:checked')
+    
 
     password.addEventListener('input', () => {
       const value = password.value;
@@ -359,7 +363,9 @@
       
     });
 
-    Create_Account_btn.addEventListener('click',()=>{
+    Create_Account_btn.addEventListener('click', async(event)=>{
+      event.preventDefault()
+
       const role = document.querySelector('input[name="role"]:checked')
       const userData = {
         full_name : fullName.value,
@@ -368,8 +374,25 @@
         password  : password.value,
        role  :role.value
   }
-      console.log(userData);
-      
+try {
+  const terms = document.getElementById('terms');
+     if (terms.checked) {
+        let response = await fetch('/registration',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify(userData)
+     })
+      let data = await response.json();
+      alert(data.msg)
+     }else{
+      return alert('agree to terms and privacy')
+     }
+} catch (error) {
+  console.log('error registering user ',error);  
+}
+       
     })
    
   </script>
