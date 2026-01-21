@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var bcrypt = require('./encrypt');
+var {bcrypt} = require('./encrypt');
 const db = require('./db_connection')
 router.use(express.json());
 
@@ -18,10 +18,10 @@ router.post('/',async function (req, res, next) {
 
   db.query('INSERT INTO users(fullName,username,email,password,role) VALUES (?,?,?,?,?)',[full_name,username,email,password_hash,role], (err,rows)=>{
     if(err) return res.status(400).json({msg:err.sqlMessage});
-    res.status(201).json({msg:'user registered successfully'});
+    res.status(201).json({msg:'user registered successfully',msg1:201});
   })
 
 });
 
-module.exports = router,bcrypt;
+module.exports = router;
 
