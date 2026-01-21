@@ -22,6 +22,6 @@ router.post('/',async function (req, res, next) {
   })
 
 });
-
+module.exports = bcrypt;
 module.exports = router;
 
