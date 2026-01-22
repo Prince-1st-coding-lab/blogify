@@ -263,13 +263,11 @@
      })
       let data = await response.json();
       alert(data.msg)
-
-      // localStorage.setItem('token',data.token)
-      // console.log(localStorage.getItem('token'));
       
-      if (data.msg1 == 200) {
+      if (data.role) {
         setTimeout(() => {
-        window.location.href='/admin';
+        window.location.href='/'+data.role;
+                
       }, 1000);
       }
      

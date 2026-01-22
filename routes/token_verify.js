@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const auth_token = (req,res,next)=>{
     const token = req.cookies.token;
 
-    if(!token) return res.status(401).json({msg:'no token provided'})
+    if(!token) return res.redirect('/login')
         jwt.verify(token,process.env.secretKey,(err,user)=>{
             if(err) return res.status(403).json({msg:'invalid token provided'})
                 req.user = user;

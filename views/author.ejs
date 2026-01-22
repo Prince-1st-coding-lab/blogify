@@ -79,6 +79,7 @@ a { text-decoration:none; color:inherit }
   margin-top:auto;
   padding:20px;
   color:var(--danger);
+  cursor: pointer;
 }
 
 /* =====================
@@ -264,7 +265,7 @@ a { text-decoration:none; color:inherit }
     <a onclick="showPage('analytics')">Analytics</a>
     <a onclick="showPage('settings')">Settings</a>
   </nav>
-  <div class="logout">Logout</div>
+  <div class="logout" onclick="logout()">Logout</div>
 </aside>
 
 <!-- MAIN -->
@@ -371,7 +372,7 @@ function showPage(id){
 /* THEME */
 function toggleTheme(){
   document.body.dataset.theme =
-    document.body.dataset.theme === 'dark' ? 'light' : 'dark'
+   document.body.dataset.theme === 'dark' ? 'light' : 'dark'
 }
 
 /* SIDEBAR */
@@ -401,6 +402,31 @@ editor.addEventListener('input',()=>{
 
 function saveDraft(){ toast('Draft saved') }
 function publish(){ toast('Post published') }
+
+///////////////////////////////////////////////////////////////////
+async function logout(){  
+try {
+     
+     const confirm_logout = confirm('Are you sure you want to logout?')
+     if (confirm_logout) {
+      window.location.href='/login'
+
+        let response = await fetch('/admin/logout',{
+        method:'POST',
+        credentials:"include"
+       })
+     if (!response.ok) {
+      alert('unable logout')      
+     }
+     }
+     
+     
+     
+} catch (error) {
+  console.log('error during login ',error);  
+}
+}
+
 </script>
 
 </body>

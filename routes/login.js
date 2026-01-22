@@ -29,9 +29,10 @@ router.post('/', function(req, res, next) {
         httpOnly:true,
         secure:false,
         sameSite:'strict',
+        path:'/',
         maxAge:2 * 24 * 60 * 60 * 1000
       })
-      res.status(200).json({msg:'login success',msg1:200})
+      res.status(200).json({msg:'login success',msg1:200,role:DBuser.role})
       
     
   })
