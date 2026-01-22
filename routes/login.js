@@ -25,7 +25,13 @@ router.post('/', function(req, res, next) {
 
       //generating token
       const token =  jwt.sign({email:DBuser.email,role:DBuser.role} , process.env.secretKey ,{expiresIn:'1h'});
-      res.status(200).json({msg:'login success',token:token,msg1:200})
+      res.cookie('token',token,{
+        httpOnly:true,
+        secure:false,
+        sameSite:'strict',
+        maxAge:2 * 24 * 60 * 60 * 1000
+      })
+      res.status(200).json({msg:'login success',msg1:200})
       
     
   })
