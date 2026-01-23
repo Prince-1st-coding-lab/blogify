@@ -79,7 +79,7 @@ a { text-decoration:none; color:inherit }
   margin-top:auto;
   padding:20px;
   color:var(--danger);
-  cursor: pointer;
+  cursor:pointer;
 }
 
 /* =====================
@@ -154,7 +154,6 @@ a { text-decoration:none; color:inherit }
 .table header { font-weight:600; background:rgba(0,0,0,.03) }
 .row { border-top:1px solid rgba(0,0,0,.05) }
 
-/* Status */
 .badge {
   padding:4px 10px;
   border-radius:999px;
@@ -182,13 +181,8 @@ a { text-decoration:none; color:inherit }
   background:transparent;
   color:var(--text);
 }
-.editor {
-  min-height:240px;
-}
-.form-actions {
-  display:flex;
-  gap:12px;
-}
+.editor { min-height:240px }
+.form-actions { display:flex; gap:12px }
 
 /* =====================
    BUTTONS
@@ -205,9 +199,7 @@ a { text-decoration:none; color:inherit }
   border:1px solid var(--primary);
   color:var(--primary);
 }
-.btn.danger {
-  background:var(--danger);
-}
+.btn.danger { background:var(--danger) }
 
 /* =====================
    TOAST
@@ -255,23 +247,19 @@ a { text-decoration:none; color:inherit }
 
 <body data-theme="light">
 
-<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="logo">BlogDash</div>
   <nav class="nav">
-    <a class="active" onclick="showPage('dashboard')">Dashboard</a>
-    <a onclick="showPage('posts')">My Posts</a>
-    <a onclick="showPage('editor')">Create Post</a>
-    <a onclick="showPage('analytics')">Analytics</a>
-    <a onclick="showPage('settings')">Settings</a>
+    <a class="active" onclick="showPage('dashboard', this)">Dashboard</a>
+    <a onclick="showPage('posts', this)">My Posts</a>
+    <a onclick="showPage('editor', this)">Create Post</a>
+    <a onclick="showPage('analytics', this)">Analytics</a>
+    <a onclick="showPage('settings', this)">Settings</a>
   </nav>
   <div class="logout" onclick="logout()">Logout</div>
 </aside>
 
-<!-- MAIN -->
 <div class="main">
-
-  <!-- TOPBAR -->
   <div class="topbar">
     <button class="btn outline" onclick="toggleSidebar()">☰</button>
     <input placeholder="Search your posts..." />
@@ -281,10 +269,7 @@ a { text-decoration:none; color:inherit }
     </div>
   </div>
 
-  <!-- CONTENT -->
   <div class="content">
-
-    <!-- DASHBOARD -->
     <section id="dashboard">
       <div class="cards">
         <div class="card"><h3>Total Posts</h3><p>24</p></div>
@@ -295,7 +280,6 @@ a { text-decoration:none; color:inherit }
       <button class="btn" onclick="showPage('editor')">Create New Post</button>
     </section>
 
-    <!-- POSTS -->
     <section id="posts" class="hidden">
       <div class="table">
         <header>
@@ -313,16 +297,16 @@ a { text-decoration:none; color:inherit }
       </div>
     </section>
 
-    <!-- EDITOR -->
     <section id="editor" class="hidden">
       <div class="form">
-        <input placeholder="Post title"/>
-        <select>
+        <input placeholder="Post title" id="post-title"/>
+        <select id="post-category">
           <option>Category</option>
           <option>Tech</option>
           <option>Design</option>
         </select>
-        <div class="editor" contenteditable placeholder="Write your post..."></div>
+        <input type="text" id="post-image" placeholder="Image link https://image.com/blog-image">
+        <div class="editor" id="content-editor" contenteditable></div>
         <p id="stats">0 words · 0 min read</p>
         <div class="form-actions">
           <button class="btn outline" onclick="saveDraft()">Save Draft</button>
@@ -331,12 +315,10 @@ a { text-decoration:none; color:inherit }
       </div>
     </section>
 
-    <!-- ANALYTICS -->
     <section id="analytics" class="hidden">
       <div class="card">📊 Engagement charts go here</div>
     </section>
 
-    <!-- SETTINGS -->
     <section id="settings" class="hidden">
       <div class="form">
         <input placeholder="Name"/>
@@ -344,14 +326,11 @@ a { text-decoration:none; color:inherit }
         <button class="btn">Update Profile</button>
       </div>
     </section>
-
   </div>
 </div>
 
-<!-- TOAST -->
-<div class="toast" id="toast">Saved successfully</div>
+<div class="toast" id="toast"></div>
 
-<!-- MODAL -->
 <div class="modal" id="modal">
   <div class="modal-box">
     <p>Delete this post?</p><br>
@@ -361,26 +340,41 @@ a { text-decoration:none; color:inherit }
 </div>
 
 <script>
-/* NAV */
-function showPage(id){
+  // LOAD ALL DATA
+async function all() {
+  let response = await fetch('/author/all');
+  let data = await response.json();
+  console.log(data);
+    
+}
+all()
+/* LOAD SAVED THEME */
+function loadSavedTheme() {
+  const savedTheme = localStorage.getItem('theme')
+  if (savedTheme) {
+    document.body.dataset.theme = savedTheme
+  }
+}
+loadSavedTheme()
+
+function toggleTheme(){
+  const newTheme =
+    document.body.dataset.theme === 'dark' ? 'light' : 'dark'
+  document.body.dataset.theme = newTheme
+  localStorage.setItem('theme', newTheme)
+}
+
+function showPage(id, el){
   document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'))
   document.getElementById(id).classList.remove('hidden')
   document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'))
-  event.target.classList.add('active')
+  if (el) el.classList.add('active')
 }
 
-/* THEME */
-function toggleTheme(){
-  document.body.dataset.theme =
-   document.body.dataset.theme === 'dark' ? 'light' : 'dark'
-}
-
-/* SIDEBAR */
 function toggleSidebar(){
   document.getElementById('sidebar').classList.toggle('open')
 }
 
-/* TOAST */
 function toast(msg){
   const t=document.getElementById('toast')
   t.textContent=msg
@@ -388,11 +382,9 @@ function toast(msg){
   setTimeout(()=>t.classList.remove('show'),2000)
 }
 
-/* MODAL */
 function openModal(){ modal.classList.add('show') }
 function closeModal(){ modal.classList.remove('show') }
 
-/* EDITOR */
 const editor=document.querySelector('.editor')
 editor.addEventListener('input',()=>{
   const words=editor.innerText.trim().split(/\s+/).filter(Boolean).length
@@ -401,32 +393,56 @@ editor.addEventListener('input',()=>{
 })
 
 function saveDraft(){ toast('Draft saved') }
-function publish(){ toast('Post published') }
 
-///////////////////////////////////////////////////////////////////
-async function logout(){  
-try {
-     
-     const confirm_logout = confirm('Are you sure you want to logout?')
-     if (confirm_logout) {
-      window.location.href='/login'
+async function publish(){ 
+  let post_title = document.getElementById('post-title');
+  let post_image = document.getElementById('post-image');
+  let post_category = document.getElementById('post-category');
+  let editor = document.getElementById('content-editor');
+  
+  const body = {
+    post_title:post_title.value,
+    slug:post_title.value.split(" ").join("-"),
+    post_image:post_image.value,
+    post_category:post_category.value,
+    editor:editor.innerHTML
+  }
+  //////////////////////
+ try {
+   const response = await fetch('/author/new/post',{
+  method:'POST',
+  headers:{
+    'Content-Type':'application/json'
+  },
+  body:JSON.stringify(body)
+})
 
-        let response = await fetch('/admin/logout',{
-        method:'POST',
-        credentials:"include"
-       })
-     if (!response.ok) {
-      alert('unable logout')      
-     }
-     }
-     
-     
-     
-} catch (error) {
-  console.log('error during login ',error);  
+ const data = await response.json()
+ toast(data.msg)
+
+//  console.log(data); 
+
+ } catch (error) {
+  console.log(error);
+   }
+
+   
+ }
+
+
+async function logout(){
+  if (!confirm('Are you sure you want to logout?')) return
+  try {
+    const response = await fetch('/admin/logout',{
+      method:'POST',
+      credentials:'include'
+    })
+    if (response.ok) location.href='/login'
+    else alert('Unable to logout')
+  } catch (e) {
+    console.error(e)
+  }
 }
-}
-
 </script>
 
 </body>

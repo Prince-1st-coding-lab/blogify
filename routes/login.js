@@ -24,7 +24,7 @@ router.post('/', function(req, res, next) {
     if(!password_verify) return res.status(401).json({msg:'incorect password'})
 
       //generating token
-      const token =  jwt.sign({email:DBuser.email,role:DBuser.role} , process.env.secretKey ,{expiresIn:'1h'});
+      const token =  jwt.sign({email:DBuser.email,role:DBuser.role,id:DBuser.id} , process.env.secretKey ,{expiresIn:'1h'});
       res.cookie('token',token,{
         httpOnly:true,
         secure:false,
