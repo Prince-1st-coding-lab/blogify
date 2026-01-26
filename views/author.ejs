@@ -334,11 +334,11 @@
             <option>Design</option>
           </select>
           <input type="text" id="update-image" placeholder="Image link https://image.com/blog-image">
-          <div class="update" id="content-editor" contenteditable></div>
+          <div class="update" id="update-content-editor" contenteditable></div>
           <p id="stats">0 words · 0 min read</p>
           <div class="form-actions">
-            <button class="btn outline" onclick="saveDraft()">Save Draft</button>
-            <button class="btn" onclick="publish()">Publish</button>
+            <button class="btn outline" onclick="saveDraftUpdate()">Save Draft</button>
+            <button class="btn" onclick="publishUpdate()">Publish</button>
           </div>
         </div>
       </section>
@@ -416,16 +416,107 @@
     document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'))
     if (el) el.classList.add('active')
   }
-
+let update_postId = null;
  async function editPage(post_id){
-  const res = await fetch(`/author/update?postId=${post_id}`);
-  const data = res.json();
-  console.log(data);
+  fetch(`/author/all/update?postId=${post_id}`)
+  .then(Response => Response.json())
+  .then(data =>{
+    let post_title =document.getElementById('update-title')
+    let post_image =document.getElementById('update-image')
+    let post_editor =document.getElementById('update-content-editor')
+    let post_category=document.getElementById('update-category');
+    
+    post_title.value = data[0].title;
+    post_image.value = data[0].featured_image;
+    post_editor.innerText = data[0].content;
+    update_postId = post_id;
+
+    
+  })
   
     document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'))
     document.getElementById('updator').classList.remove('hidden')
     document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'))
   }
+
+    async function publishUpdate(){ 
+    let post_title = document.getElementById('update-title');
+    let post_image = document.getElementById('update-image');
+    let post_category = document.getElementById('update-category');
+    let editor = document.getElementById('update-content-editor');
+    
+    const body = {
+      title:post_title.value,
+      slug:post_title.value.split(" ").join("-"),
+      status:'published',
+      image:post_image.value,
+      category:post_category.value,
+      content:editor.innerHTML
+    }
+    //////////////////////
+  try {
+    const response = await fetch(`/author/update?postId=${update_postId}`,{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json'
+    },
+    body:JSON.stringify(body)
+  })
+
+  const data = await response.json()
+  // console.log(data);
+  
+  toast(data.msg)
+  showPage('posts', this)
+
+  //     
+
+  } catch (error) {
+    console.log(error);
+    }
+
+    all()
+    
+  }
+    async function saveDraftUpdate(){ 
+    let post_title = document.getElementById('update-title');
+    let post_image = document.getElementById('update-image');
+    let post_category = document.getElementById('update-category');
+    let editor = document.getElementById('update-content-editor');
+    
+    const body = {
+      title:post_title.value,
+      slug:post_title.value.split(" ").join("-"),
+      status:'draft',
+      image:post_image.value,
+      category:post_category.value,
+      content:editor.innerHTML
+    }
+    //////////////////////
+  try {
+    const response = await fetch(`/author/update?postId=${update_postId}`,{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json'
+    },
+    body:JSON.stringify(body)
+  })
+
+  const data = await response.json()
+  // console.log(data);
+  
+  toast(data.msg)
+
+  //  console.log(data); 
+
+  } catch (error) {
+    console.log(error);
+    }
+
+    all()
+    showPage('posts', this)
+  }
+
 
   function toggleSidebar(){
     document.getElementById('sidebar').classList.toggle('open')
@@ -493,7 +584,7 @@
 
   const data = await response.json()
   toast('draft created')
-
+showPage('posts', this)
   //  console.log(data); 
 
   } catch (error) {
@@ -529,7 +620,7 @@
 
   const data = await response.json()
   toast(data.msg)
-
+showPage('posts', this)
   //  console.log(data); 
 
   } catch (error) {
