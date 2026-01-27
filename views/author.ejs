@@ -287,10 +287,10 @@
     <div class="content">
       <section id="dashboard">
         <div class="cards">
-          <div class="card"><h3>Total Posts</h3><p>24</p></div>
-          <div class="card"><h3>Published</h3><p>18</p></div>
-          <div class="card"><h3>Drafts</h3><p>6</p></div>
-          <div class="card"><h3>Comments</h3><p>42</p></div>
+          <div class="card"><h3>Total Posts</h3><p id="total-posts">0</p></div>
+          <div class="card"><h3>Published</h3><p id="published">0</p></div>
+          <div class="card"><h3>Drafts</h3><p id="draft">0</p></div>
+          <div class="card"><h3>Comments</h3><p>0</p></div>
         </div>
         <button class="btn" onclick="showPage('editor')">Create New Post</button>
       </section>
@@ -311,9 +311,12 @@
         <div class="form">
           <input placeholder="Post title" id="post-title"/>
           <select id="post-category">
-            <option>Category</option>
-            <option>Tech</option>
-            <option>Design</option>
+                    <option value="technology">technology</option>
+                    <option value="programming">programming</option>
+                    <option value="business">business</option>
+                    <option value="education">education</option>
+                    <option value="lifestyle">lifestyle</option>
+                    <option value="news">news</option>
           </select>
           <input type="text" id="post-image" placeholder="Image link https://image.com/blog-image">
           <div class="editor" id="content-editor" contenteditable></div>
@@ -329,9 +332,12 @@
              <h1>Update post</h1><br>
           <input placeholder="Post title" id="update-title"/>
           <select id="update-category">
-            <option>Category</option>
-            <option>Tech</option>
-            <option>Design</option>
+             <option value="technology">technology</option>
+                <option value="programming">programming</option>
+                <option value="business">business</option>
+                <option value="education">education</option>
+                <option value="lifestyle">lifestyle</option>
+                <option value="news">news</option>
           </select>
           <input type="text" id="update-image" placeholder="Image link https://image.com/blog-image">
           <div class="update" id="update-content-editor" contenteditable></div>
@@ -374,7 +380,20 @@
     // console.log(data);
     let table = document.querySelector('.table-rows')
   table.innerHTML="";
+  let post_counter = 0
+  let published_counter = 0
+  let draft_counter = 0
     data.forEach(element => {
+      post_counter += 1;
+      document.getElementById('total-posts').innerText = post_counter;
+      if (element.status == "published") {
+        published_counter +=1 ;
+        document.getElementById("published").innerText = published_counter;
+      }
+      if (element.status == "draft") {
+        draft_counter +=1 ;
+        document.getElementById("draft").innerText = draft_counter;
+      }
       let table = document.querySelector('.table-rows')
       
       table.innerHTML +=`
@@ -429,6 +448,7 @@ let update_postId = null;
     post_title.value = data[0].title;
     post_image.value = data[0].featured_image;
     post_editor.innerText = data[0].content;
+    post_category.value = data[0].category;
     update_postId = post_id;
 
     
@@ -599,6 +619,7 @@ showPage('posts', this)
     let post_image = document.getElementById('post-image');
     let post_category = document.getElementById('post-category');
     let editor = document.getElementById('content-editor');
+    console.log(post_category.value);
     
     const body = {
       post_title:post_title.value,

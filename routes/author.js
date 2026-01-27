@@ -14,7 +14,7 @@ router.get('/',auth_token, function(req, res, next) {
 /* GET all author page. */
 router.get('/all',auth_token, function(req, res, next) {
    if(req.user.role != 'author') return res.json({msg:'you are not author'})
-    db.query('select id,title,status,updated_at,user_id from posts where user_id=?',[req.user.id],(err,rows)=>{
+    db.query('select id,title,status,updated_at,user_id from posts where user_id=? order by updated_at desc',[req.user.id],(err,rows)=>{
        if(err) return res.json({msg:err.sqlMessage});
        res.json(rows)
   })
