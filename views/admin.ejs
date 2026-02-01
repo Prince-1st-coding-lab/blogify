@@ -253,7 +253,23 @@
         </tbody>
       </table>
     </div>
+          <div class="page" id="edit">
+          <div class="card">
+          <h3>Edit Post</h3>
 
+          <input id="eTitle" placeholder="Title" style="width:100%;padding:10px;margin-bottom:10px">
+          <input id="eCategory" placeholder="Category" style="width:100%;padding:10px;margin-bottom:10px">
+
+          <select id="eStatus" style="width:100%;padding:10px;margin-bottom:10px">
+            <option>draft</option>
+            <option>pending</option>
+            <option>published</option>
+          </select>
+
+          <button class="btn" onclick="Update()">Update</button>
+          <button class="btn" style="background:#6b7280" onclick="goBack()">Cancel</button>
+          </div>
+          </div>
     <!-- CATEGORIES -->
     <div class="page" id="categories">
       <div class="stats">
@@ -322,7 +338,6 @@
  async function dashboard(){
      let response = await fetch('/admin/dashboard');
     let data = await response.json();
-    console.log(data);
     let dashboard_table = document.getElementById('dashboard-table');
     dashboard_table.innerHTML = "";
     data.forEach(element => {
@@ -333,7 +348,7 @@
             <td>${element.status}</td>
             <td>${element.category}</td>
             <td>${element.updated_at.split('T')[0]}</td>
-           <td><button id="actions">edit</button>|<button id="actions" style="color:rgb(212, 57, 57);">delete</button></td>
+           <td><button id="actions" onclick="openEdit('${element.title}','${element.category}','${element.status}',${element.id})">edit</button>|<button id="actions" style="color:rgb(212, 57, 57);">delete</button></td>
           </tr>
       `;
     });
@@ -359,6 +374,62 @@
       title.textContent = link.textContent;
     };
   });
+let pTitle = null;
+let pStatus = null;
+let pCategory = null;
+let update_postId = null;
+
+function openEdit(title, category, status, id) {
+  document.querySelector('[data-page="edit"]').click();
+
+  document.getElementById('eTitle').value = title;
+  document.getElementById('eCategory').value = category;
+  document.getElementById('eStatus').value = status;
+
+  update_postId = id;
+}
+
+async function Update() {
+  const eTitle = document.getElementById('eTitle').value.trim();
+  const eCategory = document.getElementById('eCategory').value.trim();
+  const eStatus = document.getElementById('eStatus').value;
+
+  if (!eTitle || !eCategory) {
+    alert('Title and Category are required');
+    return;
+  }
+
+  const body = {
+    title: eTitle,
+    slug: eTitle.split(" ").join("-").toLowerCase(),
+    status: eStatus,
+    category: eCategory
+  };
+
+  try {
+    const response = await fetch(`/admin/post/update?postId=${update_postId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    const data = await response.json();
+    console.log(data);
+
+    alert('Post updated successfully');
+    dashboard(); // refresh table
+    goBack();
+
+  } catch (error) {
+    console.error(error);
+    alert('Update failed');
+  }
+}
+
+
+function goBack(){
+  document.querySelector('[data-page="dashboard"]').click();
+}
 
   async function logout(){
     if(confirm('Are you sure you want to logout?')){

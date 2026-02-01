@@ -346,6 +346,16 @@
     icon.classList.toggle('fa-moon', !isDark);
     icon.classList.toggle('fa-sun', isDark);
   };
+
+  function allPosts() {
+   fetch('/all/posts')
+   .then(Response => Response.json())
+   .then(data => {console.log(data);
+   
+   })
+    
+  }
+  allPosts();
 </script>
 </body>
 </html>

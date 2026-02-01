@@ -18,6 +18,20 @@ router.get('/dashboard',auth_token,(req,res,next)=>{
        res.json(rows)})
 
 })
+//////////////////////////////
+
+router.post('/post/update',auth_token, function(req, res, next) {
+      if(req.user.role != 'admin') return res.json({msg:'you are not admin'});
+      if(!req.query) return res.json({msg:'no id provided'});
+      const {postId} = req.query;
+      const {title,slug,category,status} = req.body;
+
+      db.query('UPDATE posts set title=?,slug=?,category=?,status=? WHERE id = ?',[title,slug,category,status,postId],(err,rows)=>{
+    if(err) return res.json({msg:err.sqlMessage});
+    res.json({msg:'Post updated'})
+   })
+      
+});
 ////////////////////////////
 router.post('/logout',(req,res)=>{
   res.clearCookie('token',{
