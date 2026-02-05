@@ -13,7 +13,7 @@ res.redirect(`/${req.user.role}`)
 /////////////////////////////////////////
 router.get('/dashboard',auth_token,(req,res,next)=>{
     if(req.user.role != 'admin') res.redirect(`/${req.user.role}`)
-   db.query('select posts.* , users.fullName from posts inner join users on posts.user_id = users.id order by updated_at desc',(err,rows)=>{
+   db.query('select users.* , posts.id,posts.title,posts.status,posts.updated_at,posts.user_id from users inner join posts on posts.user_id = users.id  order by updated_at desc',(err,rows)=>{
        if(err) return res.json({msg:err.sqlMessage});
        res.json(rows)})
 

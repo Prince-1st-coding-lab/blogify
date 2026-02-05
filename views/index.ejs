@@ -273,43 +273,13 @@
 </section>
 
 <main class="container">
-  <section>
+  <section class="posts">
     <div class="filters">
       <button>Latest</button>
       <button>Most Liked</button>
       <button>Most Commented</button>
       <button>Trending</button>
     </div>
-
-    <article class="post">
-      <div class="post-header">
-        <div class="avatar"></div>
-        <span>Jane Doe · Jan 15</span>
-      </div>
-      <h3>Why Developers Love Clean UI</h3>
-      <p>Clean interfaces improve focus, readability, and overall user satisfaction...</p>
-      <div class="actions">
-        <span><i class="fa-regular fa-thumbs-up"></i> 24</span>
-        <span><i class="fa-regular fa-comment"></i> 5</span>
-        <span><i class="fa-regular fa-bookmark"></i></span>
-        <span><i class="fa-solid fa-share"></i></span>
-      </div>
-    </article>
-
-    <article class="post">
-      <div class="post-header">
-        <div class="avatar"></div>
-        <span>Prince · Jan 12</span>
-      </div>
-      <h3>Express.js Tips for Beginners</h3>
-      <p>Learn practical Express.js patterns to build scalable backends faster...</p>
-      <div class="actions">
-        <span><i class="fa-regular fa-thumbs-up"></i> 41</span>
-        <span><i class="fa-regular fa-comment"></i> 9</span>
-        <span><i class="fa-regular fa-bookmark"></i></span>
-        <span><i class="fa-solid fa-share"></i></span>
-      </div>
-    </article>
   </section>
 
   <aside>
@@ -348,10 +318,32 @@
   };
 
   function allPosts() {
+    let container = document.querySelector('.posts');
    fetch('/all/posts')
    .then(Response => Response.json())
    .then(data => {console.log(data);
-   
+    data.forEach(element => {
+      let post = document.createElement('article');
+      post.classList.add('post');
+      post.innerHTML += `
+      <div class="post-header">
+        <div class="avatar"></div>
+        <span>${element.fullName} · ${element.updated_at.split("T")[0]}</span>
+      </div>
+      <h3>${element.title}</h3>
+      <p>${element.content}.</p>
+      <div class="actions">
+        <span><i class="fa-regular fa-thumbs-up"></i> 41</span>
+        <span><i class="fa-regular fa-comment"></i> 9</span>
+        <span><i class="fa-regular fa-bookmark"></i></span>
+        <span><i class="fa-solid fa-share"></i></span>
+      </div>
+      `;
+
+      container.append(post);
+    });
+
+    
    })
     
   }
