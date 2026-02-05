@@ -619,7 +619,10 @@ showPage('posts', this)
     let post_image = document.getElementById('post-image');
     let post_category = document.getElementById('post-category');
     let editor = document.getElementById('content-editor');
-    console.log(post_category.value);
+    let preview_post = editor.innerHTML.split(" ");
+    let temp_preview_post = [];
+    
+        console.log(post_category.value);
     
     const body = {
       post_title:post_title.value,
