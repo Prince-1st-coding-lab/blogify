@@ -7,7 +7,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 router.get('/all/posts', function(req, res, next) {
-    db.query('select posts.* , users.fullname from users inner join posts on posts.user_id = users.id  order by updated_at desc',(err,rows)=>{
+    db.query('select posts.* , users.fullName,users.proflePic from users inner join posts on posts.user_id = users.id  order by updated_at desc',(err,rows)=>{
        if(err) return res.json({msg:err.sqlMessage});
        res.json(rows)
       })
@@ -17,6 +17,10 @@ router.get('/post/:slug', function(req, res, next) {
 
   db.query('select posts.* , users.fullName from users inner join posts on  posts.user_id = users.id where posts.slug=?',[req.params.slug],(err,rows)=>{
        if(err) return res.json({msg:err.sqlMessage});
+       if (!rows || rows.length === 0) {
+        res.status(400).json({msg:'no data found'})
+       }
+       
        const postDATA = rows[0];
        res.render('reader.ejs',{
         title:postDATA.title,

@@ -258,8 +258,18 @@
           <h3>Edit Post</h3>
 
           <input id="eTitle" placeholder="Title" style="width:100%;padding:10px;margin-bottom:10px">
-          <input id="eCategory" placeholder="Category" style="width:100%;padding:10px;margin-bottom:10px">
+          <!-- <input id="eCategory" placeholder="Category" style="width:100%;padding:10px;margin-bottom:10px"> -->
 
+
+          <select id="eCategory" style="width:100%;padding:10px;margin-bottom:10px">
+            <option>technology</option>
+            <option>business</option>
+            <option>published</option>
+            <option>programming</option>
+            <option>education</option>
+            <option>news</option>
+            <option>lifestyle</option>
+          </select>
           <select id="eStatus" style="width:100%;padding:10px;margin-bottom:10px">
             <option>draft</option>
             <option>pending</option>
@@ -401,7 +411,7 @@ async function Update() {
 
   const body = {
     title: eTitle,
-    slug: eTitle.split(" ").join("-").toLowerCase(),
+    slug: eTitle.replace(/[^a-zA-Z0-9]/g, '').split(" ").join("-").toLowerCase(),
     status: eStatus,
     category: eCategory
   };

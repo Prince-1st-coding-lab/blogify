@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 26, 2026 at 06:23 AM
+-- Generation Time: Feb 06, 2026 at 03:22 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -46,11 +46,8 @@ CREATE TABLE `posts` (
 --
 
 INSERT INTO `posts` (`id`, `user_id`, `title`, `slug`, `content`, `featured_image`, `category`, `status`, `views`, `created_at`, `updated_at`) VALUES
-(7, 1, 'title 3', 'title-3', 'xnxxnn', 'image', '', 'draft', 0, '2026-01-25 11:08:22', '2026-01-25 11:08:22'),
-(8, 1, 'tttt', 'tttt', 'kjytre', 'image', '', 'draft', 0, '2026-01-25 11:13:41', '2026-01-25 11:13:41'),
-(9, 1, 'hello mother fucker', 'hello-mother-fucker', 'text', 'image', '', 'published', 0, '2026-01-25 11:17:51', '2026-01-25 11:17:51'),
-(10, 1, 'hello mother fucker 2', 'hello-mother-fucker-2', 'tttttttttttttttt', 'image', '', 'published', 0, '2026-01-25 11:20:09', '2026-01-25 11:20:09'),
-(13, 1, 'tttth', 'tttth', 'hhhhhhhhhhhh', 'imagej ', '', 'draft', 0, '2026-01-25 11:21:29', '2026-01-25 11:21:29');
+(1, 1, 'Elections under federal con?trol President Trump proposes nationalizing elections', 'electionsunderfederalcontrolpresidenttrumpproposesnationalizingelections', '<span style=\"color: rgb(41, 41, 41); font-family: Lora, serif; font-size: 14.4px; letter-spacing: -0.0432px;\">Washington, D.C. – With President Trump\'s signature this week, more than 95% of the federal government is funded through full-year FY26 appropriations - delivering stability, certainty, and results for the American people. This moment reflects months of deliberate, line-by-line work by House Republicans in upholding a member-driven process, prioritizing fiscal responsibility, and implementing America First policies that drive strength, security, and growth in communities nationwide.</span>', 'https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA1VKXUS.img?w=738&h=415&q=60&m=6&f=jpg&u=t', 'news', 'published', 0, '2026-02-06 08:47:45', '2026-02-06 12:35:31'),
+(2, 1, 'Elections under federal control', 'elections-under-federal-control', 'lorem ipsum dolor', 'https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA1VKXUS.img?w=738&h=415&q=60&m=6&f=jpg&u=t', 'programming', 'pending', 0, '2026-02-06 12:10:29', '2026-02-06 12:25:22');
 
 -- --------------------------------------------------------
 
@@ -62,6 +59,7 @@ CREATE TABLE `users` (
   `id` int(100) NOT NULL,
   `fullName` varchar(250) NOT NULL,
   `username` varchar(250) NOT NULL,
+  `proflePic` varchar(200) NOT NULL DEFAULT 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0Vt3v25YczqZvo8kqRJEaW5Mz8wD91T_8Ar6U5cD9-A&s',
   `email` varchar(250) NOT NULL,
   `password` varchar(250) NOT NULL,
   `role` enum('admin','user','author') DEFAULT NULL
@@ -71,8 +69,9 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `fullName`, `username`, `email`, `password`, `role`) VALUES
-(1, 'Prince', 'prince2k7', 'imbugazange1@yahoo.com', '$2b$10$SjMk9naoPn9vLl/HHPlRN.lABvz1XT0xcPD9Vrl6/ZtFgY9qBr1TS', 'author');
+INSERT INTO `users` (`id`, `fullName`, `username`, `proflePic`, `email`, `password`, `role`) VALUES
+(1, 'Prince', 'prince2k7', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0Vt3v25YczqZvo8kqRJEaW5Mz8wD91T_8Ar6U5cD9-A&s', 'imbugazange1@yahoo.com', '$2b$10$SjMk9naoPn9vLl/HHPlRN.lABvz1XT0xcPD9Vrl6/ZtFgY9qBr1TS', 'author'),
+(3, 'fgg', 'hhhh', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0Vt3v25YczqZvo8kqRJEaW5Mz8wD91T_8Ar6U5cD9-A&s', 'imbugazange1@gmail.com', '$2b$10$83qGRtFGOldpnhxm/oRSDudV8sMKj2BuLF9sJjE2u2H6b6ZKxVAjW', 'admin');
 
 --
 -- Indexes for dumped tables
@@ -84,7 +83,8 @@ INSERT INTO `users` (`id`, `fullName`, `username`, `email`, `password`, `role`) 
 ALTER TABLE `posts`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `slug` (`slug`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `title` (`title`,`featured_image`,`category`,`status`,`updated_at`);
 
 --
 -- Indexes for table `users`
@@ -102,13 +102,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables

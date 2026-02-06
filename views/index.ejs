@@ -180,6 +180,12 @@
       border-radius: 50%;
       background: #ddd;
     }
+    .avatar img{
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #ddd;
+    }
 
     .post h3 {
       margin: 10px 0 6px;
@@ -302,7 +308,6 @@
   </aside>
 </main>
 
-
 <footer>
   © 2026 Blogify · Privacy · Terms · Contact
 </footer>
@@ -335,8 +340,8 @@
       post.innerHTML += `
       <a href="/post/${element.slug}" target="_blank" rel="noopener noreferrer">
       <div class="post-header">
-        <div class="avatar"></div>
-        <span>${element.fullname} · ${element.updated_at.split("T")[0]}</span>
+        <div class="avatar"><img src="${element.proflePic}" alt="${element.proflePic}"></div>
+        <span>${element.fullName} · ${element.updated_at.split("T")[0]}</span>
       </div>
       <h3>${element.title}</h3>
       <p class="prev_content">${element.content}.</p>
